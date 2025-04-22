@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-2xl font-bold mb-6">Your Routes</h1>
+    <a href="{% url 'create_route' %}" 
+       class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors mb-4 inline-block">
+        Create New Route
+    </a>
+    
+    <div class="space-y-4">
+        {% for route in routes %}
+        <div class="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+            <a href="{% url 'route_detail' route.id %}" class="text-lg font-semibold text-blue-600 hover:text-blue-800">
+                {{ route.name|default:"Unnamed Route" }}
+            </a>
+            <p class="text-sm text-gray-500 mt-1">
+                Created: {{ route.created_at|date:"M d, Y H:i" }}
+            </p>
+        </div>
+        {% empty %}
+        <p class="text-gray-600">No routes found. Create your first route!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

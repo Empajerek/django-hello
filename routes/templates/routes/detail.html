@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4">{{ route.name|default:"Unnamed Route" }}</h2>
+    <!-- Add Point -->
+    <form method="post" class="mb-8" name="pointForm">
+        {% csrf_token %}
+        <div class="flex gap-4">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">X Coordinate</label>
+                {{ form.x }}
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Y Coordinate</label>
+                {{ form.y }}
+            </div>
+            <div class="self-end">
+                <button type="submit" 
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    Add Point
+                </button>
+            </div>
+        </div>
+    </form>
+    <!-- Image and Canvas -->
+    <div class="relative mb-6 border rounded-lg overflow-hidden">
+        <img src="{{ route.background.image.url }}" 
+             id="route-image" 
+             class="w-full h-auto">
+        <canvas id="route-canvas" 
+                class="absolute top-0 left-0 w-full h-full"></canvas>
+    </div>
+    <!-- Points  -->
+    <div class="space-y-2">
+        <h3 class="text-lg font-semibold mb-2">Points List</h3>
+        {% for point in points %}
+        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+            <span class="font-mono">
+                ({{ point.x }}, {{ point.y }}) Id: {{ point.order }} 
+            </span>
+            <form method="post" action="{% url 'delete_point' route.id point.id %}">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="text-red-500 hover:text-red-700 text-sm font-medium">
+                    Delete
+                </button>
+            </form>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">No points added yet</p>
+        {% endfor %}
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('route-canvas');
+    const img = document.getElementById('route-image');
+    
+    const scaleX = img.clientWidth / img.naturalWidth;
+    const scaleY = img.clientHeight / img.naturalHeight;
+    canvas.width = img.clientWidth;
+    canvas.height = img.clientHeight;
+    
+    const ctx = canvas.getContext('2d');
+    
+    ctx.beginPath();
+    {% for point in points %}
+        const x{{ point.order }} = {{ point.x }} * scaleX;
+        const y{{ point.order }} = {{ point.y }} * scaleY;
+        {% if forloop.first %}
+            ctx.moveTo(x{{ point.order }}, y{{ point.order }});
+        {% else %}
+            ctx.lineTo(x{{ point.order }}, y{{ point.order }});
+        {% endif %}
+    {% endfor %}
+    ctx.strokeStyle = '#ef4444'; // Tailwind red-500
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    {% for point in points %}
+    ctx.beginPath();
+    
+    ctx.arc(x{{ point.order}}, y{{ point.order }}, 6, 0, 2 * Math.PI);
+    ctx.fillStyle = '#10b981'; // Tailwind emerald-500
+    ctx.fill();
+    
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    ctx.fillStyle = 'white';
+    ctx.fillRect(x{{ point.order }} - 12, y{{ point.order }} - 32, 24, 20);
+    
+    ctx.fillStyle = '#1f2937'; // Tailwind gray-800
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('{{ forloop.counter0 }}', x{{ point.order }}, y{{ point.order }} - 18);
+    {% endfor %}
+
+    document.getElementById('route-canvas').addEventListener("click", function(event) {
+        const rect = event.target.getBoundingClientRect();
+        
+        const x = Math.round((event.clientX - rect.left) / scaleX);
+        const y = Math.round((event.clientY - rect.top) / scaleY);
+
+        document.getElementById("id_x").value = x;
+        document.getElementById("id_y").value = y;
+    });
+});
+</script>
+{% endblock %}
