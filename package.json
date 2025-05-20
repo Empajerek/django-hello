@@ -1,0 +1,30 @@
+{
+  "name": "django-hello",
+  "version": "1.0.0",
+  "description": "interactive-route-editor",
+  "homepage": "https://github.com/Empajerek/django-hello#readme",
+  "bugs": {
+    "url": "https://github.com/Empajerek/django-hello/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Empajerek/django-hello.git"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "build:css": "tailwindcss -i ./media/css/input.css -o ./media/css/output.css"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.1.0"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.6",
+    "@tailwindcss/postcss": "^4.1.6",
+    "@tailwindcss/vite": "^4.1.6",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.6"
+  }
+}

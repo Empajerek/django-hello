@@ -675,10 +675,6 @@ video {
   flex: 1 1 0%;
 }
 
-.grow {
-  flex-grow: 1;
-}
-
 .flex-row {
   flex-direction: row;
 }
@@ -946,14 +942,14 @@ video {
   color: rgb(30 64 175 / var(--tw-text-opacity));
 }
 
-.hover\:text-red-700:hover {
-  --tw-text-opacity: 1;
-  color: rgb(185 28 28 / var(--tw-text-opacity));
-}
-
 .hover\:text-gray-800:hover {
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+
+.hover\:text-red-700:hover {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
 .focus\:outline-none:focus {

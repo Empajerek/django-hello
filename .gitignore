@@ -1,0 +1,4 @@
+node_modules/
+.venv/
+media/js/dist/
+media/css/output.css
