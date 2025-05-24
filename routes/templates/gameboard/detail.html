@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="grid-container" class="mb-4"></div>
+{{ dots|json_script:"dots-json" }}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/media/js/dist/gameboard.js"></script>
+{% endblock %}

@@ -3,8 +3,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max
-from .models import Route, Point, BackgroundImage
-from .forms import RouteForm, PointForm
+from .models import Route, Point, BackgroundImage, Gameboard
+from .forms import RouteForm, PointForm, GameboardForm
 
 def register(request):
     if request.method == 'POST':
@@ -61,3 +61,34 @@ def delete_point(request, route_id, point_id):
     if request.method == 'POST':
         point.delete()
     return redirect('route_detail', route_id=route.id)
+
+@login_required
+def gameboard_list(request):
+    gameboards = Gameboard.objects.filter(user=request.user)
+    return render(request, 'gameboard/list.html', {'gameboards': gameboards})
+
+@login_required
+def create_gameboard(request):
+    if request.method == 'POST':
+        form = GameboardForm(request.POST)
+        if form.is_valid():
+            gameboard = form.save(commit=False)
+            gameboard.user = request.user 
+            gameboard.save()
+            return redirect('gameboard_detail', gameboard_id=gameboard.id)
+    else:
+        form = GameboardForm()
+    return render(request, 'gameboard/create.html', {'form': form})
+
+@login_required
+def delete_gameboard(request, gameboard_id):
+    gameboard = get_object_or_404(Gameboard, id=gameboard_id, user=request.user)
+    gameboard.delete()
+    return redirect('gameboard_list')
+
+@login_required 
+def gameboard_detail(request, gameboard_id):
+    gameboard = get_object_or_404(Gameboard, id=gameboard_id, user=request.user)
+    # add form?
+    return render(request, 'gameboard/detail.html', {'gameboard': gameboard, 'dots': gameboard.dots})
+
