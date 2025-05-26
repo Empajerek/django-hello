@@ -3,8 +3,10 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max
+from django.http import JsonResponse, HttpResponseBadRequest
 from .models import Route, Point, BackgroundImage, Gameboard
 from .forms import RouteForm, PointForm, GameboardForm
+import json
 
 def register(request):
     if request.method == 'POST':
@@ -89,6 +91,16 @@ def delete_gameboard(request, gameboard_id):
 @login_required 
 def gameboard_detail(request, gameboard_id):
     gameboard = get_object_or_404(Gameboard, id=gameboard_id, user=request.user)
-    # add form?
-    return render(request, 'gameboard/detail.html', {'gameboard': gameboard, 'dots': gameboard.dots})
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return HttpResponseBadRequest('Invalid JSON')
 
+        print(type(data[0]))
+
+        gameboard.dots = data
+        gameboard.save()
+        return JsonResponse({'status':'ok'})
+
+    return render(request, 'gameboard/detail.html', {'gameboard': gameboard, 'dots': gameboard.dots})

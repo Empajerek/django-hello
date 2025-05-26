@@ -1,7 +1,29 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
-<div id="grid-container" class="mb-4"></div>
+<div class="container mx-auto px-4 py-4 flex flex-col items-center">
+  <link href="/media/css/gameboard.css" rel="stylesheet">
+  <input type="hidden" id="board-id" value="{{ gameboard.id }}">
+  <div id="color-picker" class="mb-6 flex gap-2">
+    <div class="color-option" data-color="#FF4500" style="background-color: #FF4500"></div>
+    <div class="color-option" data-color="#FFD700" style="background-color: #FFD700"></div>
+    <div class="color-option" data-color="#ADFF2F" style="background-color: #ADFF2F"></div>
+    <div class="color-option" data-color="#40E0D0" style="background-color: #40E0D0"></div>
+    <div class="color-option" data-color="#FF69B4" style="background-color: #FF69B4"></div>
+    <div class="color-option" data-color="#7FFF00" style="background-color: #7FFF00"></div>
+    <div class="color-option" data-color="#3C14F8" style="background-color: #0C14F8"></div>
+    <div class="color-option" data-color="#9932CC" style="background-color: #9932CC"></div>
+    <div class="color-option" data-color="#F87777" style="background-color: #F87777"></div>
+  </div>
+  <div id="grid-container" class="mb-4" data-rows="{{ gameboard.rows }}" data-cols="{{ gameboard.cols }}">
+    <div class="cell bg-gray-200 cursor-pointer"></div>
+  </div>
+  {% csrf_token %}
+  <button id="save-btn" class="bg-green-500 text-white px-4 py-2 rounded">
+      Zapisz planszę
+  </button>
+</div>
 {{ dots|json_script:"dots-json" }}
 {% endblock %}
 

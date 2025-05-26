@@ -140,7 +140,7 @@ class RouteEditor {
   private initPointHighlight(): void {
     document.querySelectorAll('.point-item').forEach(point => {
       point.addEventListener('mouseenter', () => {
-        const id = parseFloat(point.getAttribute('data-id')!);
+        const id = parseFloat(point.getAttribute('data-y')!);
         this.routeRenderer.highlightPoint(id);
         this.initializeRoute();
       });
