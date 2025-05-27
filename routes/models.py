@@ -1,6 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Game(model.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    gameboard = models.ForeignKey(Gameboard, on_delete=models.CASCADE)
+    gamestate = models.JSONField(default=list)
+
+    def __str__:
+        return f"game {self.name} {self.username} ({self.gameboard.name})"
+
 class Gameboard(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
