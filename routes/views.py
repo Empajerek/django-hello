@@ -110,8 +110,6 @@ def gameboard_detail(request, gameboard_id):
         except json.JSONDecodeError:
             return HttpResponseBadRequest('Invalid JSON')
 
-        print(type(data[0]))
-
         gameboard.dots = data
         gameboard.save()
         return JsonResponse({'status': 'ok'})
@@ -150,4 +148,17 @@ def delete_game(request, game_id):
 @login_required
 def play_game(request, game_id):
     game = get_object_or_404(Game, id=game_id, user=request.user)
-    return render(request, 'game/play.html', {'gameboard': game.gameboard})
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return HttpResponseBadRequest('Invalid JSON')
+
+        print(data)
+        game.paths = data
+        game.save()
+        return JsonResponse({'status': 'ok'})
+
+    return render(request, 'game/play.html', {'gameboard': game.gameboard,
+                                              'game': game,
+                                              'paths': game.paths})

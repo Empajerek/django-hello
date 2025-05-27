@@ -32,8 +32,8 @@ urlpatterns = [
 
     path('game/', views.game_list, name='game_list'),
     path('game/create/', views.create_game, name='create_game'),
-    path('game/<int:game>/', views.play_game, name='play_game'),
-    path('game/<int:game>/delete', views.delete_game, name='delete_game'),
+    path('game/<int:game_id>/', views.play_game, name='play_game'),
+    path('game/<int:game_id>/delete', views.delete_game, name='delete_game'),
 
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0)),
     path('api/', include('routes.api.urls')),

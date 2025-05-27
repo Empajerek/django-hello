@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-4 flex flex-col items-center">
+  <link href="/media/css/gameboard.css" rel="stylesheet">
+  <input type="hidden" id="game-id" value="{{ game.id }}">
+
+    <!-- Image and Canvas -->
+    <div class="relative mb-6 border rounded-lg overflow-hidden">
+      <div id="grid-container" class="mb-4" data-rows="{{ gameboard.rows }}" data-cols="{{ gameboard.cols }}">
+        <div class="cell bg-gray-200 cursor-pointer"></div>
+      </div>
+      <canvas id="flowCanvas" 
+              class="absolute top-0 left-0 w-full h-full"></canvas>
+    </div>
+
+  {% csrf_token %}
+  <button id="save-btn" class="bg-green-500 text-white px-4 py-2 rounded">
+      Zapisz grę
+  </button>
+</div>
+{{ gameboard.dots|json_script:"dots-json" }}
+{{ game.paths|json_script:"paths-json" }}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/media/js/dist/game.js"></script>
+{% endblock %}
+
