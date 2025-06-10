@@ -3,7 +3,8 @@ from . import views
 from django.contrib.auth import views as auth_views
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, \
+                                            BasicAuthentication
 from django.urls import path, include
 
 schema_view = get_schema_view(
@@ -39,4 +40,7 @@ urlpatterns = [
     path('api/', include('routes.api.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('', RedirectView.as_view(url='game/', permanent=False), name='index'),
+
+
+    path('sse/notifications/', views.sse_notifications, name='sse_notifications'),
 ]

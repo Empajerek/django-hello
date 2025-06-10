@@ -6,7 +6,31 @@ from django.db.models import Max
 from django.http import JsonResponse, HttpResponseBadRequest
 from .models import Route, Point,  Gameboard, Game
 from .forms import RouteForm, PointForm, GameboardForm, GameForm
+from django.http import StreamingHttpResponse
+from .sse.manager import SSEManager, SSEConnection
 import json
+
+
+def sse_notifications(request):
+    def event_stream():
+        sse_manager = SSEManager()
+        connection = SSEConnection()
+        channel = "notifications"
+
+        sse_manager.add_connection(channel, connection)
+        try:
+            for message in connection.stream():
+                yield message
+        finally:
+            sse_manager.remove_connection(channel, connection)
+
+    response = StreamingHttpResponse(
+        event_stream(),
+        content_type='text/event-stream'
+    )
+    response['Cache-Control'] = 'no-cache'
+    # response['Connection'] = 'keep-alive'
+    return response
 
 
 def register(request):
